@@ -15,7 +15,7 @@ app.use(express.json());
 
 // Rotas simples de teste
 app.get("/", (req, res) => {
-  connectDB();
+  connectDB(res);
   //res.send("🚀 Servidor e MongoDB funcionando!");
 });
 
