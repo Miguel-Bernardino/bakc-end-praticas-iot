@@ -11,11 +11,12 @@ const app = express();
 app.use(express.json());
 
 // Conectar ao banco MongoDB Atlas
-connectDB(); // ← Chamada da conexão
+//connectDB(); // ← Chamada da conexão
 
 // Rotas simples de teste
 app.get("/", (req, res) => {
-  res.send("🚀 Servidor e MongoDB funcionando!");
+  connectDB();
+  //res.send("🚀 Servidor e MongoDB funcionando!");
 });
 
 // Porta definida no .env ou 3000 por padrão
