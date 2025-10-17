@@ -22,6 +22,13 @@ npm install -D typescript ts-node-dev @types/node @types/express
 ### cria o arquivo tsconfig.json
 npx tsc --init 
 
+### instala o mongoDB 
+npm install mongoose
+npm install -D @types/mongoose
+
+### instalacao do dotenv
+npm install dotenv
+
 
 
 
