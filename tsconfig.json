@@ -7,8 +7,10 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
+    "outDir": "dist",
+    "target": "ES2020",
     "module": "nodenext",
-    "target": "esnext",
+    "rootDir": "src",
     "types": [],
     // For nodejs:
     // "lib": ["esnext"],
