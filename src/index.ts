@@ -15,8 +15,8 @@ app.use(express.json());
 
 // Rotas simples de teste
 app.get("/", (req, res) => {
-  connectDB(res);
-  //res.send("🚀 Servidor e MongoDB funcionando!");
+  //connectDB(res);
+  res.send("🚀 Servidor e MongoDB funcionando!");
 });
 
 // Porta definida no .env ou 3000 por padrão
