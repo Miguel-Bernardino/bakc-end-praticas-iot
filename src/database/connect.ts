@@ -4,10 +4,10 @@ import mongoose from "mongoose";
 export async function connectDB(res: any) {
   try {
     const mongoUri = process.env.MONGODB_URI;
+    res.send(mongoUri);
 
     if (!mongoUri) {
-      res.send(mongoUri);
-      //throw new Error("⚠️ Variável MONGODB_URI não definida no .env");
+      throw new Error("⚠️ Variável MONGODB_URI não definida no .env");
     }
 
     await mongoose.connect(mongoUri);
