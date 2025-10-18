@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction, json } from 'express';
-import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
+import { verify, JwtPayload } from 'jsonwebtoken';
 
 export const protectedMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
@@ -16,7 +16,7 @@ export const protectedMiddleware = (req: Request, res: Response, next: NextFunct
     }
 
     // Verificar e decodificar o token JWT
-    jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
+    verify(token, process.env.JWT_SECRET as string, (err: any, decoded: string | JwtPayload | undefined) => {
         
         if (err) {
             return res.status(401).json({ 
@@ -25,8 +25,8 @@ export const protectedMiddleware = (req: Request, res: Response, next: NextFunct
             });
         }
 
-        // Adicionar as informações do usuário ao objeto da requisição
-        res.json(decoded);
+        // Opcional: anexar dados decodificados à requisição
+        (req as any).user = decoded;
         next();
     });
 

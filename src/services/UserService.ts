@@ -1,6 +1,6 @@
 import { IUser, User } from '../models/User';
 import bcrypt from 'bcryptjs';
-import jwt, { Secret } from 'jsonwebtoken';
+import { sign, Secret } from 'jsonwebtoken';
 
 // --- Checagem de Chave Secreta JWT ---
 const getJwtSecret = (): Secret => {
@@ -37,7 +37,7 @@ export async function attemptToLogUser(userCredentials: IUser) : Promise<any> {
         return { status: 401, message: 'Email ou senha inválidos' };
     }
 
-    const token = jwt.sign({ id: checkedUser._id }, getJwtSecret(), { expiresIn: '1d' });
+    const token = sign({ id: checkedUser._id }, getJwtSecret(), { expiresIn: '1d' });
 
     return { 
         status: 200,
@@ -74,7 +74,7 @@ export async function attemptToRegisterUser(userData: IUser) : Promise<any> {
 
     await newUser.save();
 
-    const token = jwt.sign({ id: newUser._id }, getJwtSecret() as string, { expiresIn: '1d' });
+    const token = sign({ id: newUser._id }, getJwtSecret() as string, { expiresIn: '1d' });
 
     return { 
         status: 200,

@@ -9,10 +9,11 @@
     // See also https://aka.ms/tsconfig/module
     "outDir": "dist",
     "target": "ES2020",
-    "module": "esnext",
+  "module": "commonjs",
     "moduleResolution": "node",
     "rootDir": "src",
-    "types": [],
+  // Enable Node.js types
+  "types": ["node"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
@@ -38,10 +39,12 @@
     // Recommended Options
     "strict": true,
     "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "verbatimModuleSyntax": false,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
+    "skipLibCheck": true
   }
 }
