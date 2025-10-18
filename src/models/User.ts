@@ -1,30 +1,38 @@
 import { Schema, model } from "mongoose"
 import bcrypt from 'bcryptjs';
 
-export interface IUser{
-    name: string;
-    email: string;
-    password: string;
-    comparePassword(password: string): Promise<boolean>;
+export interface IUser extends Document {
+  name?: string;
+  email?: string;
+  password?: string;
 }
 
 const userSchema = new Schema<IUser>(
-    {
-        name: { type: String, required: true },
-        email: { type: String, required: true, unique: true },
-        password: { type: String, required: true, select: false },
-    },
-    { timestamps: true }
+  {
+    name:     { type: String, required: [true, "Nome é obrigatório" ], trim: true,                                },
+    email:    { type: String, required: [true, "Email é obrigatório"], trim: true, unique: true, lowercase: true, },
+    password: { type: String, required: [true, "Senha é obrigatório"], trim: true, select: false,                 },
+  },
+  { timestamps: true }
 );
 
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next(); // só faz hash se a senha mudou
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
 
-userSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
-  return bcrypt.compare(password, this.password);
-};
+  // realiza o hash se a senha foi modificada ou se possui campos obrigatórios preenchidos
+  if (!this.isModified('password') || !this.name || 
+  !this.email || !this.password) return next(); 
+
+  try {
+
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  
+    next();
+
+  }catch(err: any) {
+    next(err);
+  }
+
+});
 
 export const User = model<IUser>('User', userSchema);

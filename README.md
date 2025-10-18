@@ -6,7 +6,7 @@ Este guia descreve apenas os passos para instalar as dependências necessárias 
 
 ## 📦 1. Inicializar o projeto Node.js
 
-No terminal do Codespaces, execute:
+No terminal, execute:
 
 ```bash
 
@@ -29,6 +29,13 @@ npm install -D @types/mongoose
 ### instalacao do dotenv
 npm install dotenv
 
+### instalacao do bcryptjs
+npm install bcryptjs
+npm install --save-dev @types/bcryptjs
+
+### instalacao do JWT
+npm install jsonwebtoken
+npm install -D @types/jsonwebtoken
 
 
 

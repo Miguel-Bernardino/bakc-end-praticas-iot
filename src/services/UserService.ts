@@ -1,21 +1,88 @@
-async function getUserById(req:any, res:any) {
+import { IUser, User } from '../models/User';
+import bcrypt from 'bcryptjs';
+import jwt, { Secret } from 'jsonwebtoken';
+
+// --- Checagem de Chave Secreta JWT ---
+const getJwtSecret = (): Secret => {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+        // Erro 500: Falha na configuração do servidor
+        throw { status: 500 , message: 'Erro interno: Chave JWT não configurada.' }; 
+    }
+    return secret;
+};
+
+// --- Checagem das Credenciais ---
+const checkCredentials = (userCredentials?: any): any => {
+    const { email, password } = userCredentials || {};
+
+    if (!userCredentials || typeof userCredentials !== 'object' || !email || !password) {
+        return false;
+    }
+
+    return userCredentials;
+};
+
+
+export async function attemptToLogUser(userCredentials: IUser) : Promise<any> {
     
+    const checkedCredentials: any = checkCredentials(userCredentials);
+
+    const uncheckedUser = await User.findOne({ email: checkedCredentials.email }).select('+password');
+    const checkedUser = checkCredentials(uncheckedUser);
+
+    const isMatch = await bcrypt.compare(checkedCredentials.password, checkedUser.password);
+
+    if (!isMatch || !checkedUser || !checkedCredentials) {
+        return { status: 401, message: 'Email ou senha inválidos' };
+    }
+
+    const token = jwt.sign({ id: checkedUser._id }, getJwtSecret(), { expiresIn: '1d' });
+
+    return { 
+        status: 200,
+        token, 
+        user: {
+            id: checkedUser._id,
+            name: checkedUser.name,
+            email: checkedUser.email,
+        } 
+    };
 }
 
-async function getAllUsers(req:any, res:any) {
+export async function attemptToRegisterUser(userData: IUser) : Promise<any> {
     
-}
+    const checkedCredentials: any = checkCredentials(userData);
 
-async function createUser(req:any, res:any) {
-    
-}
+    if (!checkedCredentials || !checkedCredentials.name) {
+        return { status: 400, message: 'Email, senha e nome são obrigatórios.' };
+    }
 
+    const existingUser = await User.findOne({ email: checkedCredentials.email });
 
-async function updateUser(req:any, res:any) {
-    
-}
+    if (existingUser) {
+        return { status: 409, message: 'Email já está em uso' };
+    }
 
+    const hashedPassword = await bcrypt.hash(checkedCredentials.password, 10);
 
-async function deleteUser(req:any, res:any) {
-    
+    const newUser = new User({ 
+        name: checkedCredentials.name, 
+        email: checkedCredentials.email, 
+        password: hashedPassword 
+    });
+
+    await newUser.save();
+
+    const token = jwt.sign({ id: newUser._id }, getJwtSecret() as string, { expiresIn: '1d' });
+
+    return { 
+        status: 200,
+        token, 
+        user: {
+            id: newUser._id,
+            name: newUser.name,
+            email: newUser.email,
+        } 
+    };
 }
