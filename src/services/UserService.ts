@@ -26,14 +26,20 @@ const checkCredentials = (userCredentials?: any): any => {
 
 export async function attemptToLogUser(userCredentials: IUser) : Promise<any> {
     
+    
     const checkedCredentials: any = checkCredentials(userCredentials);
 
     const uncheckedUser = await User.findOne({ email: checkedCredentials.email }).select('+password');
+    
+    if (!uncheckedUser || !checkedCredentials) {
+        return { status: 401, message: 'Email ou senha inválidos' };
+    }
+    
     const checkedUser = checkCredentials(uncheckedUser);
 
     const isMatch = await bcrypt.compare(checkedCredentials.password, checkedUser.password);
 
-    if (!isMatch || !checkedUser || !checkedCredentials) {
+    if (!isMatch) {
         return { status: 401, message: 'Email ou senha inválidos' };
     }
 
@@ -54,6 +60,7 @@ export async function attemptToRegisterUser(userData: IUser) : Promise<any> {
     
     const checkedCredentials: any = checkCredentials(userData);
 
+
     if (!checkedCredentials || !checkedCredentials.name) {
         return { status: 400, message: 'Email, senha e nome são obrigatórios.' };
     }
@@ -64,12 +71,17 @@ export async function attemptToRegisterUser(userData: IUser) : Promise<any> {
         return { status: 409, message: 'Email já está em uso' };
     }
 
-    const hashedPassword = await bcrypt.hash(checkedCredentials.password, 10);
+    
+    if (checkedCredentials.password.length < 6) {
+        return { status: 400, message: 'A senha deve ter pelo menos 6 caracteres.' };
+    }
+
+    //const hashedPassword = await bcrypt.hash(checkedCredentials.password, 10);
 
     const newUser = new User({ 
         name: checkedCredentials.name, 
         email: checkedCredentials.email, 
-        password: hashedPassword 
+        password: checkedCredentials.password, 
     });
 
     await newUser.save();

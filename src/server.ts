@@ -12,6 +12,7 @@ dotenv.config(); // ← Carrega as variáveis do .env
 
 // Middlewares globais
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Conectar ao banco MongoDB Atlas
 connectDB();
@@ -31,8 +32,8 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // Rotas
-app.use('/', userRoutes);
-app.use('/', protectedRoute);
+app.use('/api', userRoutes);
+app.use('/api', protectedRoute);
 
 // Middleware de tratamento de erros
 app.use(errorHandler);

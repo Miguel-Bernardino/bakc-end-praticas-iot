@@ -31,5 +31,15 @@ npm install --save-dev @types/bcryptjs
 npm install jsonwebtoken
 npm install -D @types/jsonwebtoken
 
+### DOCKER
+
+#Criar arquivo DockerFile(sem extensão) e docker-compose.yml
+
+###Apos criar use os comandos abaixo
+docker-compose up -d
+
+###executar o comando abaixo para rodar o codigo
+npm run dev
+
 
 

@@ -9,9 +9,24 @@ export interface IUser extends Document {
 
 const userSchema = new Schema<IUser>(
   {
-    name:     { type: String, required: [true, "Nome é obrigatório" ], trim: true,                                },
-    email:    { type: String, required: [true, "Email é obrigatório"], trim: true, unique: true, lowercase: true, },
-    password: { type: String, required: [true, "Senha é obrigatório"], trim: true, select: false,                 },
+    name:     { 
+      type: String, 
+      required: [true, "Nome é obrigatório" ], 
+      trim: true,                                
+    },
+    email:    { 
+      type: String, required: [true, "Email é obrigatório"], 
+      trim: true, 
+      unique: true, 
+      lowercase: true, 
+      match: [/.+\@.+\..+/, 'Por favor, insira um email válido.'],
+    },
+    password: { 
+      type: String, 
+      required: [true, "Senha é obrigatório"], 
+      trim: true, 
+      select: false,                 
+    },
   },
   { timestamps: true }
 );
@@ -20,7 +35,7 @@ userSchema.pre('save', async function(next) {
 
   // realiza o hash se a senha foi modificada ou se possui campos obrigatórios preenchidos
   if (!this.isModified('password') || !this.name || 
-  !this.email || !this.password) return next(); 
+  !this.email || !this.password ) return next(); 
 
   try {
 
