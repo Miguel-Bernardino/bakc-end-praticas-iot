@@ -4,9 +4,7 @@ import { IPerceptionLayer, PerceptionLayer } from '../models/PerceptionLayer';
 const checkCredentials = (perceptionLayerData?: any): any => {
     const perceptionLayer = perceptionLayerData || {};
 
-    if (!perceptionLayer || typeof perceptionLayer !== 'object' || perceptionLayer.temperature != 0
-        || perceptionLayer.humidity != 0  || perceptionLayer.lux != 0
-        || perceptionLayer.motionSensor != 0 || perceptionLayer.lifeProbability != 0) {
+    if (!perceptionLayer || typeof perceptionLayer !== 'object') {
         return false;
     }
 
