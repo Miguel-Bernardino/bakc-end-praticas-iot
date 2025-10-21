@@ -2,9 +2,8 @@
 import dotenv from "dotenv";
 import express, { Request, Response } from "express";
 import { connectDB } from "./database/connect"; // ← Função de conexão
-import userRoutes from './routes/userRoute';
+import PerceptionLayerRoute from './routes/PerceptionLayerRoute';
 import { errorHandler } from './middleware/errorMiddlleware';
-import protectedRoute from "./routes/protectedRoute";
 
 const app = express();
 
@@ -24,7 +23,7 @@ app.get("/", (req: Request, res: Response) => {
   
   res.status(200).json({ 
 
-    message: '🚀 Projeto Backend em Express com Autenticação JWT e MongoDB funcionando!',
+    message: '🚀 Projeto de Servico 1 funcionando com sucesso!',
     status: 'WORKING',
   
   });
@@ -32,8 +31,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // Rotas
-app.use('/api', userRoutes);
-app.use('/api', protectedRoute);
+app.use('/api', PerceptionLayerRoute);
 
 // Middleware de tratamento de erros
 app.use(errorHandler);
