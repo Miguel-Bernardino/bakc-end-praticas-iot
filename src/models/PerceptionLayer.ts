@@ -5,8 +5,9 @@ export interface IPerceptionLayer extends Document {
   humidity?: number;
   lux?: number;
   motionSensor?: number;
-  lifeProbability?: number;
+  ultrasonicSensor?: number;
   createdAt: Date; 
+  [key: string]: any; // <-- permite qualquer campo extra no TypeScript
 }
 
 const perceptionLayerSchema = new Schema<IPerceptionLayer>(
@@ -27,12 +28,15 @@ const perceptionLayerSchema = new Schema<IPerceptionLayer>(
       type: Number, 
       required: [true, "Valor do Sensor de Movimento é obrigatório"],
     },
-    lifeProbability: { 
+    ultrasonicSensor: { 
       type: Number, 
-      required: [true, "Valor da Probabilidade de Vida é obrigatório"],
+      required: [true, "Valor do Sensor Ultrassônico é obrigatório"],
     },
   },
-  { timestamps: true }
+  { 
+    timestamps: true,
+    strict: false, 
+  }
 );
 
 perceptionLayerSchema.pre('save', async function(next) {
