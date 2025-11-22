@@ -25,7 +25,9 @@ export async function sendPerceptionLayerData(perceptionLayerData: IPerceptionLa
         humidity: checkedperceptionLayerData.humidity,
         lux: checkedperceptionLayerData.lux,
         motionSensor: checkedperceptionLayerData.motionSensor,
-        lifeProbability: checkedperceptionLayerData.lifeProbability,
+        ultrasonicSensor: checkedperceptionLayerData.ultrasonicSensor,
+        colors: checkedperceptionLayerData.colors,
+        button: checkedperceptionLayerData.button,
     });
 
     await newPerceptionLayer.save();
